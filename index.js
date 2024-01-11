@@ -24,8 +24,8 @@ const API_KEY = "live_vKPZo03y2hhPbKFf3CslXAgvQCT6U44J9RpbmyxSIWu2hUorMlnAAV6e12
 
 async function initialLoad() {
     try {
-        const breeds = await fetch("https://api.thecatapi.com/v1/breeds");
-        const breedList = await breeds.json();
+        const response = await fetch("https://api.thecatapi.com/v1/breeds");
+        const breedList = await response.json();
         console.log(breedList);
         for(const breed in breedList) {
             const option = document.createElement("option");
@@ -53,8 +53,28 @@ async function initialLoad() {
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
 
+async function handleBreedChange() {
+    try {
+        const breedId = breedSelect.value;
+        const response = await fetch(`https://api.thecatapi.com/v1/breeds/${breedId}`);
+        const breedInfo = await response.json();
+        const carInner = document.getElementById("carouselInner");
+        const infoDump = document.getElementById("infoDump");
 
-breedSelect.addEventListener("change", handleC);
+        for (const info in breedInfo) {
+            const carItem = Carousel.createCarouselItem(info.image.url, info.name, info.id);
+            carInner.appendChild(carItem);
+        }
+
+        for (const info in breedInfo) {
+            
+        }        
+    } catch(error) {
+
+    }
+}
+
+breedSelect.addEventListener("change", handleBreedChange());
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
  */
